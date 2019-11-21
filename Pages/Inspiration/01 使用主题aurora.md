@@ -1,0 +1,1 @@
+此主题名为 [Aurora](https://github.com/chanshiyucx/aurora)，意为极光，该主题作者为 蝉时雨 Blog https://chanshiyu.com  QQ 1124590931,该主题继承了 HeartBeat 的设计灵感，并在此基础上做了大量颠覆和细节优化。使用 Vue 重构了所有代码，重写了每一个页面与组件。相较于 HeartBeat，体验有了大幅提升。
