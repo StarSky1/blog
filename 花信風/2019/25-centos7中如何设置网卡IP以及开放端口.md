@@ -139,3 +139,8 @@ service iptables save #保存设置
 ```shell
 -A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
 ```
+
+## 转载文章
+
+- [CentOS7设置固定IP](https://blog.csdn.net/qq_32534441/article/details/86567306)
+- [Centos7开放3306端口](https://blog.csdn.net/weiyangdong/article/details/79540217)
