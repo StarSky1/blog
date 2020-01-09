@@ -1,4 +1,4 @@
-[pixiv: 026]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2019/26.png'
+[pixiv: 026]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2019/26.jpg'
 
 ## 【转载】(https://www.cnblogs.com/nhdlb/p/10515924.html)
 <p>=================以下转自那位博主===================</p>

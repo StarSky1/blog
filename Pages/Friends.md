@@ -27,3 +27,8 @@ avatar: //i.loli.net/2019/06/19/5d0a250598daa34179.jpg
 link: //bk.cuixiaoyan.xyz/ 
 cover: //i.loli.net/2019/09/10/FlKjT7V6IqpQNEa.png
 avatar: //i.loli.net/2019/09/10/COjgeGMPZ6ialcB.jpg
+
+## walker
+link: //www.wuxf.cn/ 
+cover: //i.loli.net/2020/01/09/dh7jmLMCZbeJRBF.png
+avatar: //www.wuxf.cn/upload/2019/8/alan-f60c2fe3b4b64b2bb3249f279c255c0a.jpg

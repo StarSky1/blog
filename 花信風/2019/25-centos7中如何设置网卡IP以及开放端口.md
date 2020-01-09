@@ -1,4 +1,4 @@
-[pixiv: 025]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2019/25.png'
+[pixiv: 025]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2019/25.jpg'
 # centos7设置固定Ip方法
 IP地址的设置一般是指设置某个网卡端口的IP，所以想设置IP，首先需要弄清楚是要为哪个网卡端口设置IP，CentOS7与一般的Linux系统一样，可以通过ifconfig命令查询当前的网络设置。
 
