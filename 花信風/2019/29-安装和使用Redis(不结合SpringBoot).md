@@ -33,16 +33,16 @@ Redis（全称：Remote Dictionary Server 远程字典服务）是一款使用C�
 ![查看redis数据库](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2902.png)
 
 # linux下使用redis数据库
-1. 使用yum/apt 包管理工具，在线安装redis
+[123注释]: # '1. 使用yum/apt 包管理工具，在线安装redis'
 
-
-2. 本地安装redis
+1. 本地安装redis
 - 在官网下载redis安装包
 
 打开官网下载地址 https://redis.io/download，选择最新版进行下载。
 
-- 解压redis安装包到/usr/local/目录下
-> tar -zxf redis-5.0.7.tar.gz -C /usr/local/
+- 使用winSCP远程工具，拷贝redis安装包到Linux服务器，然后解压redis安装包到/usr/local/目录下
+> tar -zxf redis-5.0.7.tar.gz -C /usr/local/ \
+或者直接在Linux服务器上通过命令 wget 安装包下载地址 下载安装包
 
 - 检查是否已安装redis
 > rpm -qa | grep redis
@@ -54,15 +54,79 @@ Redis（全称：Remote Dictionary Server 远程字典服务）是一款使用C�
 
 使用命令`yum install -y gcc g++ gcc-c++ make`安装gcc和gcc-c++编译器即可。
 
+离线安装gcc和gcc-c++编译器，请参考：[CentOS 7系统离线安装gcc，gcc-c++](https://blog.csdn.net/White_Black007/article/details/81357234)
+
 如果还有其他报错，参考博客 https://www.cnblogs.com/liu2-/p/6914159.html
 
-- 编译完成之后，可以看到redis-5.0.7文件夹下出现src和conf等文件夹。
+- 编译完成之后，可以看到redis-5.0.7文件夹下出现src文件夹。
 
 进入src目录，执行make install进行redis安装。
+安装结果如图所示：![make install结果](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2903.png)
 
-- 
+ - 第三步：部署
 
+1.为了方便管理，将Redis文件中的conf配置文件和常用命令移动到统一文件中
 
+1）、创建bin和conf.d文件夹
+
+如图示: ![创建目录](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2904.png)
+
+2）、回到刚刚安装目录，找到redis.conf，将其复制移动到 /usr/local/redis/conf.d 下
+执行命令如下：
+> cp redis.conf /usr/local/redis/conf.d/
+
+进入src目录，复制 mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-server到/usr/local/redis/bin/
+
+>执行命令 ：cp mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-server /usr/local/redis/bin/
+
+效果如图所示：![复制后bin和conf.d的目录内容](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2905.png)
+
+3)、执行redis-server 启动redis
+
+![启动redis](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2906.png)
+
+4)、修改./conf.d/redis.conf配置文件,设置绑定ip（注：该步骤如果不需要可省略）
+
+![设置绑定ip](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2907.png)
+如需要，可将上图绑定ip改为指定ip。
+
+5)、设置后台启动redis
+
+首先编辑redis.conf文件，将daemonize属性改为yes（表明需要在后台运行）
+
+                   cd conf.d/
+                   vim redis.conf
+![修改配置文件](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2908.png)
+
+将no修改为yes
+再次启动redis服务，并指定启动服务配置文件
+> redis-server /usr/local/redis/etc/redis.conf
+
+![启动成功图](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2909.png)
+
+配置后台运行成功。
+
+6)、后台模式下停止redis
+> 执行命令 ./bin/redis-cli shutdown \
+等待1分钟，使用命令netstat -anp | grep 6379 查看redis进程已终止
+
+效果如图: ![redis停止图](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2910.png)
+
+- 第四步：配置redis服务可远程访问
+
+1)、编辑./conf.d/redis.conf配置文件,注释掉bind 127.0.0.1可以使所有的ip访问redis，关闭保护模式（protected-mode no）
+
+如图所示：![修改配置](https://cdn.jsdelivr.net/gh/starsky1/poi/2019/29/2911.png)
+
+2)、重新启动redis服务，并指定刚才修改的配置文件
+> redis-server /usr/local/redis/etc/redis.conf 即可
+
+另外，注意防火墙是否开放了6379端口，如果没开放6379端口，远程访问redis可能会失败。
+
+# Java中使用redis服务
+参考我的redis代码笔记：[代码笔记](https://gitee.com/StarsSky/JavaNotes/tree/master/redis)
+
+重点看 RedisPool、 RedisPoolUtil 这两个类。
 
 # 参考资料
 - [Linux安装redis和部署](https://www.cnblogs.com/haoliyou/p/8716624.html)
@@ -70,5 +134,7 @@ Redis（全称：Remote Dictionary Server 远程字典服务）是一款使用C�
 - [Linux下安装redis报错信息](https://www.cnblogs.com/liu2-/p/6914159.html)
 
 - [CentOS 7系统离线安装gcc，gcc-c++](https://blog.csdn.net/White_Black007/article/details/81357234)
+
+- [redis开启远程访问](https://www.cnblogs.com/Gyoung/p/6678702.html)
 
 - [Jedis的基本使用](https://blog.csdn.net/weixin_40288381/article/details/88926592)
