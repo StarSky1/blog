@@ -26,5 +26,54 @@
 ### 3、设置`crond`服务开机自启动
 设置crond定时任务服务开机自启，在 `/etc/rc.d/rc.local `脚本中加入 `/sbin/service crond start `即可
 
+### 4、后台运行jar包的脚本文件
+```shell
+#!/bin/bash
+WORK_DIR="/root/app/app_jar"
+JAR_NAME="app.jar"
+MY_JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.161-2.b14.el7.x86_64/jre/bin/java"
+HOST_IP="127.0.0.1"
+
+pid=`ps -ef | grep $JAR_NAME | grep -v grep |awk '{print $2}'`
+echo "===>pid:$pid"
+if test -n "$pid"
+then
+ps -ef|grep $JAR_NAME|grep -v grep|awk '{print $2}'|grep $pid > /dev/null
+if test $? -eq 0
+then
+echo "The process is running !\n"
+exit 3
+fi
+fi
+
+#Check process is existence
+if [ ! -f $WORK_DIR/$JAR_NAME ] ; then
+   echo "Error: Can not find the file $WORK_DIR/$JAR_NAME,shik next shell"
+   exit 3
+else
+   echo "$WORK_DIR/$JAR_NAME exist,go next"
+fi
+
+#start jar
+echo "start java application"
+cd $WORK_DIR
+nohup $MY_JAVA_HOME -Djava.library.path=lib -Djava.rmi.server.hostname=$HOST_IP -Xms128m -Xms256m -XX:+UseParallelOldGC -XX:ParallelGCThreads=2 -jar $JAR_NAME > out.log 2>&1 &
+```
+
+### 5、nohup命令
+nohup 命令运行由 Command参数和任何相关的 Arg参数指定的命令，忽略所有挂断（SIGHUP）信号。在注销后使用 nohup 命令运行后台中的程序。要运行后台中的 nohup 命令，添加 & （ 表示“and”的符号）到命令的尾部。
+
+nohup 是 no hang up 的缩写，就是不挂断的意思。
+
+nohup命令：如果你正在运行一个进程，而且你觉得在退出帐户时该进程还不会结束，那么可以使用nohup命令。该命令可以在你退出帐户/关闭终端之后继续运行相应的进程。
+
+在缺省情况下该作业的所有输出都被重定向到一个名为nohup.out的文件中。
+<br/>
+用法举例： nohup command > myout.file 2>&1 &   
+
+在上面的例子中，0 – stdin (standard input)，1 – stdout (standard output)，2 – stderr (standard error) ;
+2>&1是将标准错误（2）重定向到标准输出（&1），标准输出（&1）再被重定向输入到myout.file文件中。
+
 # 参考资料
 - [Centos7:利用crontab定时执行任务](https://www.jianshu.com/p/06c6c802d39e)
+- [nohup命令详解](https://www.cnblogs.com/jinxiao-pu/p/9131057.html)
