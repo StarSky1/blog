@@ -18,6 +18,9 @@
 # docker 安装 kms 命令
 docker run --name kms -d -p 8888:8888     kurento/kurento-media-server
 ```
+
+Docker安装教程，请查看[docker官网安装向导](https://docs.docker.com/engine/install/ubuntu/)
+
 按照 [STUN/TURN服务安装（for Kurento Media Server）](http://www.voidcn.com/article/p-kicyxdel-bow.html) 的指导，安装 turn 服务器。
 > 如果您在NAT环境（即任何云提供商）中安装Kurento，您需要在/etc/kurento/modules/kurento/WebRtcEndpoint.conf.ini中提供STUN服务器配置。 除此之外，您将必须打开您的安全组中的所有UDP端口，因为STUN将使用从整个0-65535范围可用的任何端口。
 >  下列端口应该在防火墙中打开：
