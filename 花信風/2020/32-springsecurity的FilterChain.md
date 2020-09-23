@@ -1,4 +1,4 @@
-[pixiv: 032]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32.png'
+[pixiv: 032]: # 'https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/32.png'
 
 最近的工作是在使用 springsecuriy 进行认证和授权的项目中集成 cas 客户端，由于对 springsecurity 的不了解，导致工作进展缓慢。于是，我开始恶补 springsecurity 的原理和使用方法。下面，是我这几天的学习成果，有不足和错误的地方，欢迎大家来指正。
 
@@ -17,7 +17,7 @@ springsecurity 通过一系列过滤器，即使不做配置，它也默认实�
 
 springsecurity 对 servlet 容器的支持是基于servlet的过滤器，所以通常首先了解一下过滤器扮演的角色是有帮助的。下面的图片展示了单个 http 请求处理处理程序的典型分层。
 
-![filterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/filterchain.png)
+![filterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/filterchain.png)
 
 ### 过滤器链
 
@@ -45,7 +45,7 @@ spring 提供了一个叫做 DelegatingFilterProxy 的过滤器实现，它能�
 
 这里的图片展示了 DelegatingFilterProxy 如何适应 过滤器和过滤器链。
 
-![delegatingfilterproxy](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/delegatingfilterproxy.png)
+![delegatingfilterproxy](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/delegatingfilterproxy.png)
 
 DelegatingFilterProxy 从 spring 上下文环境寻找 Bean Filter0，然后调用 Bean Filter0。DelegatingFilterProxy 的伪代码看起来像下面这样。
 
@@ -65,13 +65,13 @@ DelegatingFilterProxy 的另一个好处是，它允许延迟寻找 过滤器 Be
 
 spring security  的 servlet 支持被包含在  FilterChainProxy 中。 FilterChainProxy 是一个特殊的过滤器，它能够通过 [`SecurityFilterChain`](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/#servlet-securityfilterchain) 委托许多过滤器实例。由于 FilterChainProxy 是一个 Bean，它通常被包裹在 [DelegatingFilterProxy](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/#servlet-delegatingfilterproxy) 中。
 
-![filterchainproxy](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/filterchainproxy.png)
+![filterchainproxy](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/filterchainproxy.png)
 
 ### SecurityFilterChain
 
 [`SecurityFilterChain`](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/web/SecurityFilterChain.html) 被 [FilterChainProxy](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/#servlet-filterchainproxy) 使用，去决定哪一个 spring security 的过滤器应该被调用去处理这个请求。
 
-![securityfilterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/securityfilterchain.png)
+![securityfilterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/securityfilterchain.png)
 
 这些 security 过滤器是典型的 spring beans，但是他们通过 FilterChainProxy 来注册而不是 [DelegatingFilterProxy](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/#servlet-delegatingfilterproxy)。FilterChainProxy 提供了许多优点相对于直接在 servlet 容器注册或 [DelegatingFilterProxy](https://docs.spring.io/spring-security/site/docs/5.4.0/reference/html5/#servlet-delegatingfilterproxy) 。首先，它提供了一个起点，为所有的 spring security 的 servlet 支持。因此，如果你正在尝试去解决 spring security 的 servlet 支持问题，添加一个 Debug 点在 FilterChainProxy 将是一个很好的起始打桩点。
 
@@ -81,7 +81,7 @@ spring security  的 servlet 支持被包含在  FilterChainProxy 中。 FilterC
 
 实际上，FilterChainProxy 能被使用去决定哪一个 SecurityFilterChain 应该被使用。这将允许提供完全独立的配置，为你的应用的不同片段。
 
-![multi securityfilterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/multi-securityfilterchain.png)
+![multi securityfilterchain](https://cdn.jsdelivr.net/gh/starsky1/poi/2020/32/multi-securityfilterchain.png)
 
 在这个图中，FilterChainProxy 决定哪一个 SecurityFilterChain 应该被使用。只有首个匹配的 SecurityFilterChain 将被调用。如果一个 URL `/api/messages/` 被请求，它将首先匹配 SecurityFilterChain0 的模式 `/api/**`，所以只有 SecurityFilterChain0 会被调用，即使这个请求也匹配 SecurityFilterChainn。如果一个URL `/messages/` 被请求，它将不匹配 SecurityFilterChain0 的模式 `/api/**`，所以 FilterChainProxy 将继续尝试每个 SecurityFilterChain。假设没有其他的匹配，SecurityFilterChainn 将被调用。
 
